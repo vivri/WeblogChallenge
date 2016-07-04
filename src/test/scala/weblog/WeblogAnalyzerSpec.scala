@@ -10,7 +10,7 @@ import scala.io.Source
 class WeblogAnalyzerSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
   //
-  // Please not this isn't a real unit test; I just wanted to run it to make sure it'd work (semi-)properly.
+  // Please not this isn't a real unit test; I just wanted to run it to make sure it'd work properly and eyeball the results.
   //
   // Ideally, a property-based test would be used to auto-generate weblog entries, create predictions and test outcomes.
   // Less than ideally, a hand-crafted unit test can be created to presumably test all edge-cases.

@@ -45,6 +45,8 @@ object WeblogEntry {
 
   val weblogRegex = """^(\S+) (\S+) (\S+?):([0-9]+) (\S+?):([0-9]+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) (\S+) "([^" ]+) ([^" ]+) ([^" ]+)" "([^"]+)" (\S+) (\S+)$""".r
 
+  val timestampFormat = DateTimeFormatter.ofPattern("y-M-d'T'k:m:s.SSSSSS'Z'")
+
   /**
     * Attempt to convert a string to a [[WeblogEntry]]
     *
@@ -53,13 +55,13 @@ object WeblogEntry {
     raw match {
       case weblogRegex(tm, el, caip, cap, baip, bap, rqpt, bpt, rspt, esc, bsc, rb, sb, rmeth, rbod, rprot, ua, sc, sp) =>
         new WeblogEntry (
-         timestamp = LocalDateTime.parse(tm,DateTimeFormatter.ISO_INSTANT),
+         timestamp = LocalDateTime.parse(tm, timestampFormat),
           elb = el,
           clientAddress = (caip, cap toInt),
           backendAddress = (baip, bap toInt),
-          reqProcTime = rqpt.toInt seconds,
-          backendProcTime = bpt.toInt seconds,
-          respProcTime = rspt.toInt seconds,
+          reqProcTime = rqpt.toDouble seconds,
+          backendProcTime = bpt.toDouble seconds,
+          respProcTime = rspt.toDouble seconds,
           elbStatusCode = esc toInt,
           backendStatusCode = bsc toInt,
           receivedBytes = rb toLong,
@@ -72,6 +74,6 @@ object WeblogEntry {
       case _ => throw new IllegalArgumentException (s"Line doesn't conform to weblog standard: $raw")
     }
   } recover {
-    case x => println (x.getMessage); throw x
+    case x => println (x.getMessage); throw x  // FIXME just for debugging purposes; what to do with parse failures is a different question.
   }
 }
