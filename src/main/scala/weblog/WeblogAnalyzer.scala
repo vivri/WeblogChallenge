@@ -46,7 +46,7 @@ class WeblogAnalyzer(implicit val spark: SparkContext) {
       filter (_.isSuccess).
       map {_.get }.
       filter { entry =>
-        entry.timestamp.isAfter(timeWindow._1) || entry.timestamp.isBefore(timeWindow._2)
+        entry.timestamp.isAfter(timeWindow._1) && entry.timestamp.isBefore(timeWindow._2)
       }.
       groupBy (_.clientAddress._1).
       aggregate[WeblogAnalysisResult] (WeblogAnalysisResult ()) (foldEntriesByIP, amalgamateResults)
